@@ -4,24 +4,6 @@ import time
 import sqlite3
 import random
 import re
-
-start = time.time()
-
-# Your credentials go in a separate file called 'credentials.py'.
-reddit = praw.Reddit(client_id = client_id,
-                     client_secret = client_secret,
-                     user_agent = user_agent,
-                     username = username,
-                     password = password)
-                          
-OurSubreddits = 'pollthecrowdsandbox'
-RequiredEarnedScoreOverLastSixtyDaysToVote = 0
-
-# This is where you begin the connection to the SQLite database and prepare the cursor.
-connection = sqlite3.connect('C:/Users/A/Google Drive/Reddit/Reddit Bots/PollBot/Polls.db')
-cursor = connection.cursor()
-# cursor.execute('CREATE TABLE Polls (submission_id text PRIMARY KEY, created_utc int, recorded_utc float, counted_utc float)') # This line stays commented unless you're making a new database.
-connection.commit()
      
 class Record(object):
 
@@ -114,6 +96,24 @@ class Record(object):
         connection.commit()
 
 def main():
+    start = time.time()
+
+    # Your credentials go in a separate file called 'credentials.py'.
+    reddit = praw.Reddit(client_id = client_id,
+                         client_secret = client_secret,
+                         user_agent = user_agent,
+                         username = username,
+                         password = password)
+                     
+    OurSubreddits = 'pollthecrowdsandbox'
+    RequiredEarnedScoreOverLastSixtyDaysToVote = 0
+
+    # This is where you begin the connection to the SQLite database and prepare the cursor.
+    connection = sqlite3.connect('C:/Users/A/Google Drive/Reddit/Reddit Bots/PollBot/Polls.db')
+    cursor = connection.cursor()
+    # cursor.execute('CREATE TABLE Polls (submission_id text PRIMARY KEY, created_utc int, recorded_utc float, counted_utc float)') # This line stays commented unless you're making a new database.
+    connection.commit()
+    
     for submission in reddit.subreddit(OurSubreddits).new(limit=100):
         CurrentRecord = Record(submission)
         # print(CurrentRecord.submission_id)
@@ -124,8 +124,10 @@ def main():
     for submission_id in ReadyForCounting:
         CurrentRecord = Record(reddit.submission(id=submission_id[0][3:]))
         CurrentRecord.ConductPoll()
+
+    connection.close()
+    
+    print((time.time()-start)/60)
         
 if __name__ == '__main__':
-    main()    
-    connection.close()
-    print((time.time()-start)/60)
+    main()
