@@ -127,4 +127,3 @@ for submission_id in ReadyForCounting:
 connection.close()
 
 print((time.time()-start)/60)
-print('hello')
