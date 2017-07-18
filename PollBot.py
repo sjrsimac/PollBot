@@ -113,17 +113,19 @@ class Record(object):
         cursor.execute('UPDATE Polls SET counted_utc=? WHERE submission_id=?',(time.time(), self.submission_id))
         connection.commit()
 
-for submission in reddit.subreddit(OurSubreddits).new(limit=100):
-    CurrentRecord = Record(submission)
-    # print(CurrentRecord.submission_id)
-    CurrentRecord.RecordRequestedPoll()
+def main():
+    for submission in reddit.subreddit(OurSubreddits).new(limit=100):
+        CurrentRecord = Record(submission)
+        # print(CurrentRecord.submission_id)
+        CurrentRecord.RecordRequestedPoll()
 
-CheckReadyForCounting = cursor.execute('SELECT submission_id FROM Polls WHERE counted_utc is NULL and created_utc<=?', (time.time()-60,))
-ReadyForCounting = CheckReadyForCounting.fetchall()
-for submission_id in ReadyForCounting:
-    CurrentRecord = Record(reddit.submission(id=submission_id[0][3:]))
-    CurrentRecord.ConductPoll()
-    
-connection.close()
-
-print((time.time()-start)/60)
+    CheckReadyForCounting = cursor.execute('SELECT submission_id FROM Polls WHERE counted_utc is NULL and created_utc<=?', (time.time()-60,))
+    ReadyForCounting = CheckReadyForCounting.fetchall()
+    for submission_id in ReadyForCounting:
+        CurrentRecord = Record(reddit.submission(id=submission_id[0][3:]))
+        CurrentRecord.ConductPoll()
+        
+if __name__ == '__main__':
+    main()    
+    connection.close()
+    print((time.time()-start)/60)
