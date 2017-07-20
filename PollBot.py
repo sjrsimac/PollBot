@@ -112,7 +112,7 @@ def PollMain(Botname, OurSubreddits, Database):
         # print(CurrentRecord.submission_id)
         CurrentRecord.RecordRequestedPoll()
 
-    CheckReadyForCounting = cursor.execute('SELECT submission_id FROM Polls WHERE counted_utc is NULL and created_utc<=?', (time.time()-60,))
+    CheckReadyForCounting = cursor.execute('SELECT submission_id FROM Polls WHERE counted_utc is NULL and created_utc<=?', (time.time()-86400,))
     ReadyForCounting = CheckReadyForCounting.fetchall()
     for submission_id in ReadyForCounting:
         CurrentRecord = Record(reddit.submission(id=submission_id[0][3:]), connection)
