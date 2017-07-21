@@ -40,7 +40,7 @@ class Record(object):
                 self.cursor.execute('INSERT OR IGNORE INTO Polls (submission_id, created_utc, recorded_utc) VALUES (?,?,?)', (self.submission_id, self.created_utc, self.recorded_utc))
                 self.connection.commit()
                 # And tell everyone how to react to our bot.
-                submission.reply("Hello, I am a pollbot. I was summoned by the author, or original poster (OP), of this post. I am here to help OP quickly check the pulse of reddit. Here's how it works:\n\nOP summoned me with the phrase *!PollBot*, and then followed that key phrase with the options for this poll. For this poll, the options are:\n\n" + self.optionsForExplanation + "\nTo demonstrate your support for a particular position, include one of the phrases, such as *!" + random.sample(self.SampleOptions,1)[0] + "* in your comment, including the exclamation point.\n\nAfter 24 hours, I will return to post a summary of the results.\n\nPlease note that I only count your vote if you have at least 100 karma, and earned at least 5 karma in this subreddit in the last 60 days; or if you are an approved submitter in this subreddit. You are allowed one vote per submission.\n\n*This bot is maintained by u/sjrsimac.*")
+                self.submission.reply("Hello, I am a pollbot. I was summoned by the author, or original poster (OP), of this post. I am here to help OP quickly check the pulse of reddit. Here's how it works:\n\nOP summoned me with the phrase *!PollBot*, and then followed that key phrase with the options for this poll. For this poll, the options are:\n\n" + self.optionsForExplanation + "\nTo demonstrate your support for a particular position, include one of the phrases, such as *!" + random.sample(self.SampleOptions,1)[0] + "* in your comment, including the exclamation point.\n\nAfter 24 hours, I will return to post a summary of the results.\n\nPlease note that I only count your vote if you have at least 100 karma, and earned at least 5 karma in this subreddit in the last 60 days; or if you are an approved submitter in this subreddit. You are allowed one vote per submission.\n\n*This bot is maintained by u/sjrsimac.*")
     
     def VoterCheck(self, Botname,  RequiredEarnedScoreOverLastSixtyDaysToVote):
         # print('VoterCheck', self.submission_id)
@@ -121,4 +121,6 @@ def PollMain(Botname, OurSubreddits, Database):
     connection.close()
         
 if __name__ == '__main__':
+    start = time.time()
     PollMain('pollthecrowd','pollthecrowdsandbox','C:/Users/A/Google Drive/Reddit/Reddit Bots/PollBot/Polls.db')
+    print((time.time()-start)/60)
